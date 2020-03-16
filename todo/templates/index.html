@@ -1,0 +1,44 @@
+{% verbatim %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <ul>
+        <li v-for="task in tasks">{{ task.text }}</li>
+    </ul>
+    <input type="text" v-model="new_task_text" />
+    <button v-on:click="add()">Добавить</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            tasks: [],
+            new_task_text: ""
+        },
+        methods: {
+            add: function () {
+
+                var new_task = {
+                    text: this.new_task_text
+                };
+                this.tasks.push(new_task);
+                axios.get('/api/add?text=' + this.new_task_text);
+
+            }
+        },
+        mounted: function () {
+            axios.get('/api/get').then(response => {this.tasks = response.data;});
+        }
+    })
+</script>
+</body>
+</html>
+{% endverbatim %}
